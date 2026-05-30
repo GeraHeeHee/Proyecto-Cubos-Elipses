@@ -57,11 +57,9 @@ class Figura:
         self.posicion.coord_y += self.velocidad.y
 
         if (self.posicion.coord_x + self.dimension.width) >= ancho_ventana or self.posicion.coord_x <= 0:
-            print("Debe rebotar en x")
             self.velocidad.x *= -1
 
         if (self.posicion.coord_y + self.dimension.height) >= alto_ventana or self.posicion.coord_y <= 0:
-            print("Debe rebotar en y")
             self.velocidad.y *= -1
 
     def dibujar(self):

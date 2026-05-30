@@ -1,26 +1,23 @@
 from p5 import *
 from classes.classes import *
 from patron.Builders import *
+import random  
 
-elipse = None
-cuadrado2 = None
-cuadrado3 = None
-elipse2 = None
 ancho_ventana = 600
 alto_ventana = 600
 figuras = []
 
 def setup():
-    global elipse
-    global elipse2
-    global cuadrado2
-    global cuadrado3
-    global ancho_ventana
-    global alto_ventana
+    global ancho_ventana, alto_ventana, figuras
     size(ancho_ventana, alto_ventana)
 
-    figuras.append(crearFigura(0))
-    figuras.append(crearFigura(1))
+    cantidad_figuras = random.randint(10, 25)
+
+    for _ in range(cantidad_figuras):
+        tipo_aleatorio = random.randint(0, 1)
+        
+        nueva_figura = crearFiguraAleatoria(tipo_aleatorio)
+        figuras.append(nueva_figura)
 
 def draw():
     background(240) 
@@ -28,14 +25,41 @@ def draw():
     for figura in figuras:
         interacturarObj(figura)
 
-def interacturarObj(figura:Figura):
+def interacturarObj(figura: Figura):
     figura.dibujar()
     figura.mover_y_rebotar(ancho_ventana, alto_ventana)
 
-def crearFigura(tipo:int):
-    if tipo == 0:
-        return Builder().configBorde(2,"#000000").configColor("#123400").configDimension(50,50).configPosiciones(0,0).configVelocidad(3,2).build()
-    else:
-        return Builder().configBorde(2,"#FF0000").configColor("#796EDD").configDimension(50,50).configPosiciones(100,100).configVelocidad(-2,3).esElipse().build()
+def generar_color_hex_aleatorio():
+    """Genera un color en formato hexadecimal '#RRGGBB' de forma aleatoria."""
+    letras = "0123456789ABCDEF"
+    color = "#" + "".join(random.choice(letras) for _ in range(6))
+    return color
 
-run()
+def crearFiguraAleatoria(tipo: int):
+    
+    tamano = random.randint(30, 80)
+    
+    pos_x = random.randint(0, ancho_ventana - tamano)
+    pos_y = random.randint(0, alto_ventana - tamano)
+    
+    vel_x = random.choice([-5, -4, -3, 3, 4, 5])
+    vel_y = random.choice([-5, -4, -3, 3, 4, 5])
+    
+    color_relleno = generar_color_hex_aleatorio()
+    color_borde = generar_color_hex_aleatorio()
+    grosor_borde = random.randint(1, 4)
+
+    builder = (Builder()
+               .configBorde(grosor_borde, color_borde)
+               .configColor(color_relleno)
+               .configDimension(tamano, tamano)
+               .configPosiciones(pos_x, pos_y)
+               .configVelocidad(vel_x, vel_y))
+    
+    if tipo == 1:
+        builder.esElipse()
+        
+    return builder.build()
+
+if __name__ == "__main__":
+    run()
